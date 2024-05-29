@@ -8,6 +8,8 @@ class CandWidget extends StatefulWidget {
   bool answerSate;
 
   CandWidget({required this.tap, required this.index, required this.width, required this.text, required this.answerSate});
+
+  @override
   _CandWidgetState createState() => _CandWidgetState();
 }
 
