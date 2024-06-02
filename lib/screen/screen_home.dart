@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app_test/screen/screen_quiz.dart';
-
+import 'package:quiz_app_test/model/api_adapter.dart';
 import '../model/model_quiz.dart';
+import 'package:quiz_app_test/screen/screen_quiz.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,23 +11,40 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Quiz> quizs = [
-    Quiz.fromMap({
-      'title': 'test',
-      'candidates': ['a', 'b', 'c', 'd'],
-      'answer': 0
-    }),
-    Quiz.fromMap({
-      'title': 'test',
-      'candidates': ['a', 'b', 'c', 'd'],
-      'answer': 0
-    }),
-    Quiz.fromMap({
-      'title': 'test',
-      'candidates': ['a', 'b', 'c', 'd'],
-      'answer': 0
-    })
-  ];
+  List<Quiz> quizs = [];
+  bool isLoading = false;
+
+  _fetchQuizs() async {
+    setState(() {
+      isLoading = true;
+    });
+    final response = await http.get(Uri.parse('https://drf-quiz-test.herokuapp.com/quiz/3/'));
+    if (response.statusCode == 200) {
+      setState(() {
+        quizs = parseQuizs(utf8.decode(response.bodyBytes));
+        isLoading = false;
+      });
+    } else {
+      throw Exception('failed to load data');
+    }
+  }
+  // List<Quiz> quizs = [
+  //   Quiz.fromMap({
+  //     'title': 'test',
+  //     'candidates': ['a', 'b', 'c', 'd'],
+  //     'answer': 0
+  //   }),
+  //   Quiz.fromMap({
+  //     'title': 'test',
+  //     'candidates': ['a', 'b', 'c', 'd'],
+  //     'answer': 0
+  //   }),
+  //   Quiz.fromMap({
+  //     'title': 'test',
+  //     'candidates': ['a', 'b', 'c', 'd'],
+  //     'answer': 0
+  //   })
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -79,14 +98,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text('지금 퀴즈 풀기', style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => QuizScreen(
-                                quizs: quizs
-                              )
-                            )
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Padding(padding: EdgeInsets.only(left: width * 0.036)),
+                                  Text('로딩 중...')
+                                ],
+                              ),
+                            ),
                           );
+                          _fetchQuizs().whenComplete(() {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizScreen(
+                                        quizs: quizs
+                                    )
+                                )
+                            );
+                          });
                         },
                       ),
                     )))
