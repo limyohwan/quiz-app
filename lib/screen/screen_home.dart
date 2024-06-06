@@ -11,24 +11,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Quiz> quizs = [];
+  List<Quiz> quizzes = [];
   bool isLoading = false;
 
-  _fetchQuizs() async {
+  _fetchQuizzes() async {
     setState(() {
       isLoading = true;
     });
     final response = await http.get(Uri.parse('https://drf-quiz-test.herokuapp.com/quiz/3/'));
     if (response.statusCode == 200) {
       setState(() {
-        quizs = parseQuizs(utf8.decode(response.bodyBytes));
+        quizzes = parseQuizzes(utf8.decode(response.bodyBytes));
         isLoading = false;
       });
     } else {
       throw Exception('failed to load data');
     }
   }
-  // List<Quiz> quizs = [
+  // List<Quiz> quizzes = [
   //   Quiz.fromMap({
   //     'title': 'test',
   //     'candidates': ['a', 'b', 'c', 'd'],
@@ -109,13 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           );
-                          _fetchQuizs().whenComplete(() {
+                          _fetchQuizzes().whenComplete(() {
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             return Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => QuizScreen(
-                                        quizs: quizs
+                                        quizzes: quizzes
                                     )
                                 )
                             );

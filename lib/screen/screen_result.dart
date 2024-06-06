@@ -6,8 +6,8 @@ import '../model/model_quiz.dart';
 
 class ResultScreen extends StatelessWidget {
   List<int> answers;
-  List<Quiz> quizs;
-  ResultScreen({required this.answers, required this.quizs});
+  List<Quiz> quizzes;
+  ResultScreen({required this.answers, required this.quizzes});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,8 @@ class ResultScreen extends StatelessWidget {
     double height = screenSize.height;
 
     int score = 0;
-    for (int i = 0; i < quizs.length; i++) {
-      if (quizs[i].answer == answers[i]) {
+    for (int i = 0; i < quizzes.length; i++) {
+      if (quizzes[i].answer == answers[i]) {
         score += 1;
       }
     }
@@ -72,7 +72,7 @@ class ResultScreen extends StatelessWidget {
                         ),
                         Expanded(child: Container()),
                         Text(
-                          score.toString() + '/' + quizs.length.toString(),
+                          score.toString() + '/' + quizzes.length.toString(),
                           style: TextStyle(
                             fontSize: width * 0.21,
                             fontWeight: FontWeight.bold,

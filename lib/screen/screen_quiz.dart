@@ -7,8 +7,8 @@ import 'package:quiz_app_test/widget/widget_candidate.dart';
 import '../model/model_quiz.dart';
 
 class QuizScreen extends StatefulWidget {
-  List<Quiz> quizs;
-  QuizScreen({required this.quizs});
+  List<Quiz> quizzes;
+  QuizScreen({required this.quizzes});
   @override
   _QuizScreenState createState() => _QuizScreenState();
 }
@@ -39,9 +39,9 @@ class _QuizScreenState extends State<QuizScreen> {
             controller: _controller,
             physics: NeverScrollableScrollPhysics(),
             loop: false,
-            itemCount: widget.quizs.length,
+            itemCount: widget.quizzes.length,
             itemBuilder: (BuildContext conntext, int index) {
-              return _buildQuizCard(widget.quizs[index], width, height);
+              return _buildQuizCard(widget.quizzes[index], width, height);
             },
           ),
         ),
@@ -97,11 +97,11 @@ class _QuizScreenState extends State<QuizScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ElevatedButton(
-                  child: _currentIndex == widget.quizs.length - 1 ? Text('결과보기', style: TextStyle(color: Colors.white)) : Text('다음문제', style: TextStyle(color: Colors.white)),
+                  child: _currentIndex == widget.quizzes.length - 1 ? Text('결과보기', style: TextStyle(color: Colors.white)) : Text('다음문제', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                   onPressed: _answers[_currentIndex] == -1 ? null : () {
-                    if (_currentIndex == widget.quizs.length - 1) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen(answers: _answers, quizs: widget.quizs)));
+                    if (_currentIndex == widget.quizzes.length - 1) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ResultScreen(answers: _answers, quizzes: widget.quizzes)));
                     } else {
                       _answerState = [false, false, false, false];
                       _currentIndex += 1;
